@@ -41,6 +41,6 @@ public class ControleLeilao{
       }
       if(quantidadeDeLances > 3 || quantidadeDeLances == 0)
         punicao = true;
-      return punicao;
+        return punicao;
     }
 }

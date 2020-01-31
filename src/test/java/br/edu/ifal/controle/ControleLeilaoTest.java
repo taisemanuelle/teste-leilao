@@ -2,6 +2,8 @@ package br.edu.ifal.controle;
 
 import static org.junit.Assert.assertEquals;
 
+import java.beans.Transient;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -69,5 +71,40 @@ public class ControleLeilaoTest {
         boolean validadeEsperada = true;
         assertEquals(validadeEsperada, validadeRetornada);
     }
+
+    @Test
+    public void deveRetornarVerdadeiroParaOPrimeiroLanceDoLeilaoMaiorQueOValorMinimo(){
+        Lance novoLance = new Lance(cliente, 2700);
+        boolean validadeRetornada = controle.validarLance(novoLance, leilao);
+        boolean validadeEsperada = true;
+        assertEquals(validadeEsperada, validadeRetornada);
+    }
+    
+    @Test
+    public void deveRetornarFalsoParaUmNovoLanceMenorQueOLanceAnterior(){
+        leilao.adicionarLance(new Lance(cliente, 3000));
+        Lance novoLance = new Lance(cliente2, 2900);
+        boolean validadeRetornada = controle.validarLance(novoLance, leilao);
+        boolean validadeEsperada = false;
+        assertEquals(validadeEsperada, validadeRetornada);
+    }
+    @Test
+    public void deveRetornarVerdadeiroParaUmLanceMaiorQueOLanceAnterior(){
+        leilao.adicionarLance(new Lance(cliente, 4000));
+        Lance novoLance = new Lance(cliente2, 4500);
+        boolean validadeRetornada = controle.validarLance(novoLance, leilao);
+        boolean validadeEsperada = true;
+        assertEquals(validadeEsperada, validadeRetornada);
+    }
+    @Test 
+    public void deveRetornarFalseParaUmNovoLanceIgualAoLanceAnterior(){
+        leilao.adicionarLance(new Lance(cliente, 4000));
+        Lance novoLance = new Lance(cliente2, 4000);
+        boolean validadeRetornada = controle.validarLance(novoLance, leilao);
+        boolean validadeEsperada = false;
+        assertEquals(validadeEsperada, validadeRetornada);
+    }
+    
+
 
 }
