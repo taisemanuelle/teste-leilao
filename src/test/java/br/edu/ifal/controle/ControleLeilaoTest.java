@@ -2,6 +2,7 @@ package br.edu.ifal.controle;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import br.edu.ifal.modelo.Cliente;
@@ -11,38 +12,59 @@ import br.edu.ifal.modelo.Produto;
 
 public class ControleLeilaoTest {
 
+    Produto produto;
+    double valorMinimo;
+    Leilao leilao;
+    Cliente cliente;
+    Cliente cliente2;
+    ControleLeilao controle;
+
+    @Before
+    public void inicializacao(){
+        produto = new Produto("PS4", "video-game");
+        valorMinimo = 2500;
+        leilao = new Leilao(produto, valorMinimo);
+        cliente = new Cliente(1, "Ana");
+        cliente2 = new Cliente(2, "Zé");
+        controle = new ControleLeilao();
+    }
+
+
     @Test
     public void deveRetornarVerdadeiroParaUmLanceMaiorQueOValorMinimoDoProduto() {
-        Produto produto = new Produto("PS4", "video-game");
-        double valorMinimo = 2500;
-        Leilao leilao = new Leilao(produto, valorMinimo);
-        Cliente cliente = new Cliente(1, "Ana");
         Lance novoLance = new Lance(cliente, 2501);
-        ControleLeilao controle = new ControleLeilao();
         boolean validadeRetornada = controle.validarLance(novoLance, leilao);
         boolean validadeEsperada = true;
         assertEquals(validadeEsperada, validadeRetornada);
     }
     @Test
     public void deveRetornarFalsoParaUmLanceMenorQueOValorMinimoDoProduto() {
-        Produto produto = new Produto("PS4", "video-game");
-        double valorMinimo = 2500;
-        Leilao leilao = new Leilao(produto, valorMinimo);
-        Cliente cliente = new Cliente(1, "Ana");
         Lance novoLance = new Lance(cliente, 2000);
-        ControleLeilao controle = new ControleLeilao();
         boolean validadeRetornada = controle.validarLance(novoLance, leilao);
         boolean validadeEsperada = false;
         assertEquals(validadeEsperada, validadeRetornada);
     }
     @Test
     public void deveRetornarVerdadeiroParaUmLanceIgualAoValorMinimoDoProduto() {
-        Produto produto = new Produto("PS4", "video-game");
-        double valorMinimo = 2500;
-        Leilao leilao = new Leilao(produto, valorMinimo);
-        Cliente cliente = new Cliente(1, "Ana");
         Lance novoLance = new Lance(cliente, 2500);
-        ControleLeilao controle = new ControleLeilao();
+        boolean validadeRetornada = controle.validarLance(novoLance, leilao);
+        boolean validadeEsperada = true;
+        assertEquals(validadeEsperada, validadeRetornada);
+    }
+
+    @Test
+    public void deveRetornarFalsoParaUmLanceDadoPeloMesmoClienteDoUltimoLance(){
+        leilao.adicionarLance(new Lance(cliente, 2600));
+        Lance novoLance = new Lance(cliente, 2700);
+        boolean validadeRetornada = controle.validarLance(novoLance, leilao);
+        boolean validadeEsperada = false;
+        assertEquals(validadeEsperada, validadeRetornada);
+    }
+
+    @Test
+    public void deveRetornarVerdadeiroParaUmLanceDadoPorUmClienteDiferenteDoClienteDoUltimoLance(){
+        leilao.adicionarLance(new Lance(cliente, 2600));
+        Lance novoLance = new Lance(cliente2, 2700);
         boolean validadeRetornada = controle.validarLance(novoLance, leilao);
         boolean validadeEsperada = true;
         assertEquals(validadeEsperada, validadeRetornada);
